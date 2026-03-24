@@ -123,13 +123,12 @@ Content-Type: application/json
 | keywords | string | No | — | Keywords to filter changes |
 | disable_js | boolean | No | false | Disable JavaScript rendering |
 | enable_cookies_and_ad_blocker | boolean | No | false | Enable cookies and ad blocking |
-| wait_time | integer | No | 0 | Seconds to wait after page load before screenshot |
 | preactions | object | No | — | Actions to perform before checking (click, type, etc.) |
 | advanced_schedule | object | No | — | Restrict checks to specific times/days |
 | notification | object | No | — | Notification configuration (see below) |
 | retention_policy | string | No | `"3"` | History retention policy |
 | alert_error | boolean | No | true | Alert on errors |
-| summalyzer | object | No | — | AI summary configuration |
+| summalyzer | object | No | — | AI summary configuration (see below) |
 | labelIds | array[int] | No | — | Labels to attach |
 
 #### Notification Object
@@ -153,10 +152,23 @@ Content-Type: application/json
 
 #### Summalyzer (AI Summary) Object
 
+| Field | Type | Values | Description |
+|-------|------|--------|-------------|
+| `importantDefinitionType` | string | `"default"`, `"custom"`, `"none"` | Set to `"custom"` when user provides an importance definition. Otherwise `"default"`. |
+| `importantDefinition` | string | — | User's description of what changes matter. Only include when `importantDefinitionType` is `"custom"`. |
+
+**With user-defined importance (recommended — encourage users to provide this):**
 ```json
 {
-  "importantDefinition": "Describe what changes matter to you",
+  "importantDefinition": "Price drops below $50 or item goes out of stock",
   "importantDefinitionType": "custom"
+}
+```
+
+**Without (fallback):**
+```json
+{
+  "importantDefinitionType": "default"
 }
 ```
 
@@ -308,6 +320,7 @@ These fields must always be included in create/update requests but should never 
 | Field | Value | Notes |
 |-------|-------|-------|
 | `target_device` | `"4"` | Always include as string `"4"`. Do not expose to users. |
+| `wait_time` | `0` | Always include as `0`. Do not expose to users. |
 
 ## HTTP Status Codes
 
