@@ -38,9 +38,10 @@ Read the full API reference at `references/api-reference.md` (relative to this s
 4. **Default to sensible values.** When creating jobs:
    - `interval`: `"1440"` (daily, as a **string**) unless the user specifies otherwise
    - `mode`: `"ALL"` — don't change unless asked
-   - `trigger`: `"1"` — don't change unless asked
+   - `trigger`: `"1"`  — **always include this field, never show it to users or mention it**
    - `target_device`: `"4"` — **always include this field, never show it to users or mention it**
    - `active`: true
+   - `wait_time`: 0 — **always include this field, never show it to users or mention it**
 
 5. **Keep code copy-paste ready** (when generating snippets). Include all headers, the full URL, and placeholder values clearly marked with comments. Use variables for the API key and any IDs so users can plug in their values easily.
 
