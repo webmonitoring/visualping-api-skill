@@ -141,6 +141,8 @@ When a user asks to do something, map it to the right API call(s):
 | "List my monitors" / "Show my jobs" | GET `/v2/jobs` |
 | "Check status of a monitor" | GET `/v2/jobs/{jobId}` |
 | "See what changed" / "Get history" | GET `/v2/jobs/{jobId}` → look at `history` and `changes` arrays |
+| "Show recent activity across all jobs" / "What changed lately?" | POST `/v2/jobs/report-page` |
+| "Show me a feed / dashboard / timeline of checks" | POST `/v2/jobs/report-page` |
 | "Update a monitor" / "Change frequency" | PUT `/v2/jobs/{jobId}` |
 | "Delete / remove a monitor" | DELETE `/v2/jobs/{jobId}` |
 | "Pause a monitor" | PUT `/v2/jobs/{jobId}` with `{ "active": false }` |
@@ -148,6 +150,76 @@ When a user asks to do something, map it to the right API call(s):
 | "Get my account info" | GET `/describe-user` |
 | "Authenticate" / "Get a token" | POST `/v2/token` |
 | "Set up Slack/webhook notifications" | Include `notification` object in create/update job |
+
+## The `report-page` endpoint
+
+`POST https://job.api.visualping.io/v2/jobs/report-page`
+
+Despite its name, this endpoint is not just for generating reports — it is the most powerful way to retrieve **cross-job activity data**. It returns a reverse-chronological flat list of check history items across all jobs in a workspace, including screenshots, change detection results, AI summaries, and error details. Think of it as a unified activity feed or audit log for a workspace.
+
+Use it whenever the user wants to see recent activity, a history feed, a dashboard of what's been happening, or a digest of changes — rather than drilling into a single job.
+
+### Request
+
+```json
+{
+  "workspaceId": 18103,
+  "scope": { "comboId": -18103 },
+  "includeErrors": true,
+  "level": "allChecks"
+}
+```
+
+- `workspaceId`: the numeric workspace ID (resolve via `GET /describe-user`)
+- `scope.comboId`: always set to the negative of the `workspaceId` (e.g. workspace `18103` → `comboId: -18103`)
+- `includeErrors`: set `true` to include failed checks in the feed
+- `level`: use `"allChecks"` to get everything; other values may filter by change level
+
+### Authentication
+
+Uses the same `Authorization: Bearer YOUR_API_KEY` header as all other endpoints. **Standard API keys work** — no session token or browser login required.
+
+### Response
+
+Returns `{ count: N, items: [...] }`. Each item represents a single check run for a job, with these key fields:
+
+| Field | Description |
+|-------|-------------|
+| `jobId` | Numeric job ID |
+| `description` | Job name/label |
+| `url` | Monitored URL |
+| `screenshotLogCreated` | ISO timestamp of the check |
+| `changeDetectionLevel` | `"important"`, `"regular"`, `"minor-threshold"`, `"minor-importance"`, `"none"`, or absent |
+| `notificationSent` | Whether an alert was sent |
+| `aiOutput.changeSummary` | AI-generated description of what changed (present on change items) |
+| `aiOutput.changeIsImportant` | Boolean: whether the AI judged the change as important |
+| `errorLogId` / `errorMessage` / `errorLabel` | Present on failed checks (e.g. HTTP 404, internal errors) |
+| `currentScreenshotKey` / `previousScreenshotKey` | S3-style keys for screenshot images |
+| `diffImageKey` / `insertedImageKey` / `deletedImageKey` | Keys for visual diff images |
+| `comments` | Array of user comments on a change, each with `authorName`, `text`, `created` |
+
+Items with no `changeDetectionLevel` field and no `errorLogId` are **first-check (initial) snapshots** — the baseline capture when a job ran for the first time.
+
+### curl example
+
+```bash
+curl -X POST 'https://job.api.visualping.io/v2/jobs/report-page' \
+  -H 'Authorization: Bearer YOUR_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "workspaceId": YOUR_WORKSPACE_ID,
+    "scope": { "comboId": -YOUR_WORKSPACE_ID },
+    "includeErrors": true,
+    "level": "allChecks"
+  }'
+```
+
+### Notes
+
+- Items are already sorted **reverse-chronologically** (newest first).
+- The response is a flat list — multiple items per job are interleaved by time, not grouped.
+- To filter by change type client-side, check `changeDetectionLevel`: `"important"` and `"regular"` are genuine changes; `"none"` means no change detected; absent + no error = initial check.
+- This endpoint is well-suited for building activity feeds, dashboards, digests, and audit views. Consider pairing it with a visualization when the user wants to explore the data.
 
 ## Handling Ambiguity
 
