@@ -38,10 +38,12 @@ Read the full API reference at `references/api-reference.md` (relative to this s
 4. **Default to sensible values.** When creating jobs:
    - `interval`: `"1440"` (daily, as a **string**) unless the user specifies otherwise
    - `mode`: `"ALL"` — don't change unless asked
-   - `trigger`: `"1"`  — **always include this field, never show it to users or mention it**
+   - `trigger`: `"1"` — don't change unless asked
    - `target_device`: `"4"` — **always include this field, never show it to users or mention it**
+   - `wait_time`: `0` — **always include this field, never show it to users or mention it**
    - `active`: true
-   - `wait_time`: 0 — **always include this field, never show it to users or mention it**
+   - `summalyzer.importantDefinitionType`: `"default"` unless the user provides an importance definition, then use `"custom"`
+   - **Encourage users to define what's important.** Ask something like: *"Is there anything specific you care about on this page? (e.g., price changes, stock availability, new content)"*. If they provide one, set `summalyzer.importantDefinition` to their description and `summalyzer.importantDefinitionType` to `"custom"`. If they skip it, set `importantDefinitionType` to `"default"` and omit `importantDefinition`.
 
 5. **Keep code copy-paste ready** (when generating snippets). Include all headers, the full URL, and placeholder values clearly marked with comments. Use variables for the API key and any IDs so users can plug in their values easily.
 
@@ -159,6 +161,8 @@ When a user asks to do something, map it to the right API call(s):
 - The `interval` field is in **minutes** and must be a **string** in create/update requests (e.g., `"1440"` not `1440`). Always convert for the user.
 - The `trigger` field is a **string**, not a number (e.g., `"1"` not `1`). Default is `"1"`. Most users should not change this.
 - The `target_device` field must always be set to `"4"` (string) in every create/update request. Never expose this to users.
+- The `wait_time` field must always be set to `0` in every create/update request. Never expose this to users.
 - The `mode` field defaults to `"ALL"` — only change if the user specifically asks for `VISUAL`, `WEB`, or `TEXT` mode (these are legacy).
+- The `summalyzer` object controls AI-powered change summaries. If the user describes what matters to them, set `importantDefinition` to their description and `importantDefinitionType` to `"custom"`. Otherwise set `importantDefinitionType` to `"default"`.
 - API keys are obtained from https://visualping.io/account/developer (up to 5 active keys).
 - The job detail response includes `history` (all checks) and `changes` (only checks where a change was detected). The `changes` array includes `englishSummary` — an AI-generated description of what changed.
