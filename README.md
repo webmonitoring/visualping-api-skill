@@ -21,7 +21,7 @@ A Claude skill that lets you interact with the [Visualping API](https://visualpi
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/AntoCorkery/visualping-api-skill.git
+   git clone https://github.com/webmonitoring/visualping-api-skill.git
    ```
 2. Point Claude at the skill folder in your project settings
 
