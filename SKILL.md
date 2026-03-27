@@ -21,7 +21,7 @@ Read the full API reference at `references/api-reference.md` (relative to this s
 
 ## Core Principles
 
-1. **Ask for the API key first.** Every request needs auth. If the user hasn't provided their API key, ask for it before proceeding. Remind them they can get one at https://visualping.io/account/developer.
+1. **Ask for the API key first.** Every request needs auth. If the user hasn't provided their API key, ask for it before proceeding. Remind them they can get one at https://visualping.io/account/developer. Keys are only available to business accounts, so if they don't have one, explain that they need to upgrade to a FREE business trial to use the API.
 
 2. **Resolve workspace automatically.** When a `workspaceId` is needed:
    - Call `GET /describe-user` to retrieve the user's available workspaces.
