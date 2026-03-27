@@ -143,6 +143,7 @@ When a user asks to do something, map it to the right API call(s):
 | "See what changed" / "Get history" | GET `/v2/jobs/{jobId}` → look at `history` and `changes` arrays |
 | "Show recent activity across all jobs" / "What changed lately?" | POST `/v2/jobs/report-page` |
 | "Show me a feed / dashboard / timeline of checks" | POST `/v2/jobs/report-page` |
+| "Get an activity digest" / "Audit log of checks" | POST `/v2/jobs/report-page` |
 | "Update a monitor" / "Change frequency" | PUT `/v2/jobs/{jobId}` |
 | "Delete / remove a monitor" | DELETE `/v2/jobs/{jobId}` |
 | "Pause a monitor" | PUT `/v2/jobs/{jobId}` with `{ "active": false }` |

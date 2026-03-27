@@ -300,6 +300,81 @@ Authorization: Bearer <token>
 
 ---
 
+### 7. Report Page (Activity Feed)
+```
+POST https://job.api.visualping.io/v2/jobs/report-page
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Returns a reverse-chronological flat list of check history items across all jobs in a workspace. Use this for activity feeds, dashboards, digests, and audit views.
+
+#### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| workspaceId | integer | Yes | Workspace ID |
+| scope.comboId | integer | Yes | Negative of `workspaceId` (e.g. workspace `4348` → `-4348`) |
+| includeErrors | boolean | No | Include failed checks in the feed (default: `false`) |
+| level | string | No | `"allChecks"` to get everything; other values may filter by change level |
+
+#### Request Example
+
+```json
+{
+  "workspaceId": 4348,
+  "scope": { "comboId": -4348 },
+  "includeErrors": true,
+  "level": "allChecks"
+}
+```
+
+#### Response Body
+
+```json
+{
+  "count": 100,
+  "items": [...]
+}
+```
+
+Each item in `items` represents a single check run for a job:
+
+| Field | Description |
+|-------|-------------|
+| `jobId` | Numeric job ID |
+| `description` | Job name/label |
+| `url` | Monitored URL |
+| `screenshotLogId` | Unique ID for this check run |
+| `screenshotLogCreated` | ISO timestamp of the check |
+| `processId` | Internal processing ID |
+| `changeDetectionLevel` | `"important"`, `"regular"`, `"minor-threshold"`, `"minor-importance"`, `"none"`, or absent (initial check) |
+| `notificationSent` | Whether an alert was triggered |
+| `aiOutput.changeSummary` | AI-generated description of what changed |
+| `aiOutput.changeIsImportant` | Boolean: whether the AI judged the change as important |
+| `aiOutput.changeIsImportantReason` | Explanation of why the change was or wasn't flagged as important |
+| `matchedKeywords` | Array of any keywords that matched |
+| `currentScreenshotKey` | S3-style key for the current screenshot |
+| `previousScreenshotKey` | S3-style key for the previous screenshot |
+| `currentUncroppedScreenshotKey` | S3-style key for the full-page current screenshot |
+| `previousUncroppedScreenshotKey` | S3-style key for the full-page previous screenshot |
+| `diffImageKey` | Key for the visual diff image |
+| `insertedImageKey` | Key for inserted content image |
+| `deletedImageKey` | Key for deleted content image |
+| `faviconKey` | Key for the site favicon |
+| `disableId` | Token used to unsubscribe from alerts |
+| `errorLogId` | Present on failed checks |
+| `errorMessage` | Error description (if errored) |
+| `errorLabel` | Short error label (if errored) |
+| `comments` | Array of user comments: `{ authorName, text, created }` |
+
+**Notes:**
+- Items with no `changeDetectionLevel` and no `errorLogId` are initial baseline snapshots.
+- Results are sorted newest-first and are interleaved across jobs (not grouped by job).
+- The response is paginated at 100 items — additional pagination parameters may apply.
+
+---
+
 ## Common Interval Values
 
 | Interval (string) | Human-readable |
