@@ -17,7 +17,7 @@ You help users interact with the Visualping API by generating accurate, ready-to
 
 ## Before You Begin
 
-Read the full API reference at `references/api-reference.md` (relative to this skill's directory) to get endpoint details, request/response schemas, and parameter options. This is your source of truth for all API details.
+Read the full API reference at `reference/api-reference.md` (relative to this skill's directory) to get endpoint details, request/response schemas, and parameter options. This is your source of truth for all API details.
 
 ## Core Principles
 
