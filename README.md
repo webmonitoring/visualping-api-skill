@@ -33,26 +33,28 @@ You'll need a Visualping API key. Get one from your [Developer settings](https:/
 
 Once installed, just talk to Claude naturally:
 
-- *"Monitor https://example.com for changes"*
-- *"List all my active monitors"*
-- *"Show me the change history for job 12345"*
-- *"Pause my monitor on google.com"*
-- *"Set up a Slack notification for my monitor"*
-- *"Create a monitor that checks every hour"*
+- _"Monitor https://example.com for changes"_
+- _"List all my active monitors"_
+- _"Show me the change history for job 12345"_
+- _"Pause my monitor on google.com"_
+- _"Set up a Slack notification for my monitor"_
+- _"Create a monitor that checks every hour"_
+- _"Create a monitor with my saved settings"_
 
 Claude will ask for your API key if you haven't provided one, then either generate a code snippet or execute the call directly — your choice.
 
 ## API coverage
 
-| Action | Endpoint |
-|--------|----------|
-| Authenticate | `POST /v2/token` |
-| Get account info | `GET /describe-user` |
-| List jobs | `GET /v2/jobs` |
-| Create job | `POST /v2/jobs` |
-| Get job details & history | `GET /v2/jobs/{jobId}` |
-| Update job | `PUT /v2/jobs/{jobId}` |
-| Delete job | `DELETE /v2/jobs/{jobId}` |
+| Action                         | Endpoint                            |
+| ------------------------------ | ----------------------------------- |
+| Authenticate                   | `POST /v2/token`                    |
+| Get account info               | `GET /describe-user`                |
+| List jobs                      | `GET /v2/jobs`                      |
+| Create job                     | `POST /v2/jobs`                     |
+| Create job from saved settings | `POST /v2/jobs/from-saved-settings` |
+| Get job details & history      | `GET /v2/jobs/{jobId}`              |
+| Update job                     | `PUT /v2/jobs/{jobId}`              |
+| Delete job                     | `DELETE /v2/jobs/{jobId}`           |
 
 ## Direct execution
 
@@ -70,12 +72,14 @@ Without these domains, the skill still works — it generates ready-to-run code 
 
 When creating a monitor, the skill uses these defaults unless you specify otherwise:
 
-| Setting | Default | Notes |
-|---------|---------|-------|
-| Check frequency | Daily (1440 min) | Common: 5m, 15m, 30m, 1h, 6h, 12h, 1d, 1w |
-| Mode | ALL | Legacy options: VISUAL, WEB, TEXT |
-| Trigger sensitivity | 1 | Most users don't need to change this |
-| Active | true | Starts monitoring immediately |
+| Setting             | Default          | Notes                                     |
+| ------------------- | ---------------- | ----------------------------------------- |
+| Check frequency     | Daily (1440 min) | Common: 5m, 15m, 30m, 1h, 6h, 12h, 1d, 1w |
+| Mode                | ALL              | Legacy options: VISUAL, WEB, TEXT         |
+| Trigger sensitivity | 1                | Most users don't need to change this      |
+| Active              | true             | Starts monitoring immediately             |
+
+For preset-based creation (`POST /v2/jobs/from-saved-settings`), the saved settings determine defaults (including frequency) unless you explicitly override them.
 
 ## Support
 
