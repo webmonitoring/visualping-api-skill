@@ -9,8 +9,6 @@ description: >
   "website monitoring", "Visualping endpoints", "API key", or ask how to automate
   Visualping via code. Trigger even if the user just says "monitor this URL" or
   "set up a check on this page" — these are Visualping job creation requests.
-  Also trigger for preset-based language such as "saved settings", "saved job settings",
-  "preset", "default preset", or "use my existing defaults".
 ---
 
 # Visualping API Skill
@@ -23,7 +21,7 @@ Read the full API reference at `reference/api-reference.md` (relative to this sk
 
 ## Core Principles
 
-1. **Ask for the API key first.** Every request needs auth. If the user hasn't provided their API key, ask for it before proceeding. Remind them they can get one at https://visualping.io/account/developer. Keys are only available to business accounts, so if they don't have one, explain that they need to upgrade to a FREE business trial to use the API.
+1. **Ask for the API key first.** Every request needs auth. If the user hasn't provided their API key, ask for it before proceeding. Remind them they can get one at https://visualping.io/account/developer.
 
 2. **Resolve workspace automatically.** When a `workspaceId` is needed:
    - Call `GET /describe-user` to retrieve the user's available workspaces.

@@ -117,29 +117,29 @@ Content-Type: application/json
 
 #### Request Body
 
-| Field                         | Type       | Required       | Default  | Description                                                                                                                                              |
-| ----------------------------- | ---------- | -------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| workspaceId                   | integer    | Yes (business) | —        | Workspace ID                                                                                                                                             |
-| url                           | string     | **Yes**        | —        | URL to monitor                                                                                                                                           |
-| description                   | string     | No             | —        | Human-readable label for the job                                                                                                                         |
-| mode                          | string     | No             | `ALL`    | Monitor mode. Options: `VISUAL`, `WEB`, `TEXT`, `ALL`. Default `ALL` — most users should not change this.                                                |
-| active                        | boolean    | No             | true     | Whether the job starts active                                                                                                                            |
-| interval                      | string     | No             | `"1440"` | Check frequency in **minutes** (as a string). Default `"1440"` (once per day). Common values: `"5"`, `"15"`, `"30"`, `"60"`, `"360"`, `"720"`, `"1440"`. |
-| trigger                       | string     | No             | `"1"`    | Sensitivity threshold. Default `"1"`. Most users should not change this.                                                                                 |
-| crop                          | object     | No             | —        | Screen region to monitor: `{ x, y, width, height }`                                                                                                      |
-| proxy_id                      | integer    | No             | —        | Proxy to use                                                                                                                                             |
-| xpath                         | string     | No             | —        | XPath or CSS selector to target a specific element                                                                                                       |
-| keyword_action                | string     | No             | `ALL`    | Keyword filter mode                                                                                                                                      |
-| keywords                      | string     | No             | —        | Keywords to filter changes                                                                                                                               |
-| disable_js                    | boolean    | No             | false    | Disable JavaScript rendering                                                                                                                             |
-| enable_cookies_and_ad_blocker | boolean    | No             | false    | Enable cookies and ad blocking                                                                                                                           |
-| preactions                    | object     | No             | —        | Actions to perform before checking (click, type, etc.)                                                                                                   |
-| advanced_schedule             | object     | No             | —        | Restrict checks to specific times/days                                                                                                                   |
-| notification                  | object     | No             | —        | Notification configuration (see below)                                                                                                                   |
-| retention_policy              | string     | No             | `"3"`    | History retention policy                                                                                                                                 |
-| alert_error                   | boolean    | No             | true     | Alert on errors                                                                                                                                          |
-| summalyzer                    | object     | No             | —        | AI summary configuration (see below)                                                                                                                     |
-| labelIds                      | array[int] | No             | —        | Labels to attach                                                                                                                                         |
+| Field | Type | Required | Default  | Description                                                                                                                                              |
+|-------|------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| workspaceId | integer | Yes (business) | —        | Workspace ID                                                                                                                                             |
+| url | string | **Yes** | —        | URL to monitor                                                                                                                                           |
+| description | string | No | —        | Human-readable label for the job                                                                                                                         |
+| mode | string | No | `ALL`    | Monitor mode. Options: `VISUAL`, `WEB`, `TEXT`, `ALL`. Default `ALL` — most users should not change this.                                                |
+| active | boolean | No | true     | Whether the job starts active                                                                                                                            |
+| interval | string | No | `"1440"` | Check frequency in **minutes** (as a string). Default `"1440"` (once per day). Common values: `"5"`, `"15"`, `"30"`, `"60"`, `"360"`, `"720"`, `"1440"`. |
+| trigger | string | No | `"1"`    | Sensitivity threshold. Default `"1"`. Most users should not change this.                                                                                 |
+| crop | object | No | —        | Screen region to monitor: `{ x, y, width, height }`                                                                                                      |
+| proxy_id | integer | No | —        | Proxy to use                                                                                                                                             |
+| xpath | string | No | —        | XPath or CSS selector to target a specific element                                                                                                       |
+| keyword_action | string | No | `ALL`    | Keyword filter mode                                                                                                                                      |
+| keywords | string | No | —        | Keywords to filter changes                                                                                                                               |
+| disable_js | boolean | No | false    | Disable JavaScript rendering                                                                                                                             |
+| enable_cookies_and_ad_blocker | boolean | No | false    | Enable cookies and ad blocking                                                                                                                           |
+| preactions | object | No | —        | Actions to perform before checking (click, type, etc.)                                                                                                   |
+| advanced_schedule | object | No | —        | Restrict checks to specific times/days                                                                                                                   |
+| notification | object | No | —        | Notification configuration (see below)                                                                                                                   |
+| retention_policy | string | No | `"3"`    | History retention policy. 3 and 12 are suported.                                                                                                         |
+| alert_error | boolean | No | false    | Alert on errors                                                                                                                                          |
+| summalyzer | object | No | —        | AI summary configuration (see below)                                                                                                                     |
+| labelIds | array[int] | No | —        | Labels to attach                                                                                                                                         |
 
 #### Notification Object
 

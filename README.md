@@ -1,8 +1,8 @@
-# Visualping API Skill for Claude
+# Visualping API
 
-A Claude skill that lets you interact with the [Visualping API](https://visualping.io) directly from Claude — create monitors, list jobs, check change history, and more.
+Documentation for API plus a skill that lets you interact with the [Visualping API](https://visualping.io) directly from LLMs — create monitors, list jobs, check change history, and more.
 
-## What it does
+## What the skill does
 
 - **Generate code snippets** (curl, Python, JavaScript) for any Visualping API call
 - **Execute API calls directly** when running in an environment with terminal access
@@ -14,7 +14,7 @@ A Claude skill that lets you interact with the [Visualping API](https://visualpi
 ### Option 1: Download the `.skill` file
 
 1. Download `visualping-api.skill` from the [Releases](../../releases) page
-2. In Claude, go to **Settings → Skills**
+2. In Claude, go to **Settings → Skills** (similar process should be available for other desktop LLM apps)
 3. Upload the `.skill` file
 
 ### Option 2: Clone this repo
@@ -23,7 +23,7 @@ A Claude skill that lets you interact with the [Visualping API](https://visualpi
    ```bash
    git clone https://github.com/webmonitoring/visualping-api-skill.git
    ```
-2. Point Claude at the skill folder in your project settings
+2. Point LLM at the skill folder in your project settings
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ You'll need a Visualping API key. Get one from your [Developer settings](https:/
 
 ## Usage examples
 
-Once installed, just talk to Claude naturally:
+Once installed, just talk to LLMs naturally:
 
 - _"Monitor https://example.com for changes"_
 - _"List all my active monitors"_
@@ -41,7 +41,7 @@ Once installed, just talk to Claude naturally:
 - _"Create a monitor that checks every hour"_
 - _"Create a monitor with my saved settings"_
 
-Claude will ask for your API key if you haven't provided one, then either generate a code snippet or execute the call directly — your choice.
+LLM will ask for your API key if you haven't provided one, then either generate a code snippet or execute the call directly — your choice.
 
 ## API coverage
 
