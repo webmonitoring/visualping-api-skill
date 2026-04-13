@@ -75,8 +75,6 @@ When creating a monitor, the skill uses these defaults unless you specify otherw
 | Setting             | Default          | Notes                                     |
 | ------------------- | ---------------- | ----------------------------------------- |
 | Check frequency     | Daily (1440 min) | Common: 5m, 15m, 30m, 1h, 6h, 12h, 1d, 1w |
-| Mode                | ALL              | Legacy options: VISUAL, WEB, TEXT         |
-| Trigger sensitivity | 1                | Most users don't need to change this      |
 | Active              | true             | Starts monitoring immediately             |
 
 For preset-based creation (`POST /v2/jobs/from-saved-settings`), the saved settings determine defaults (including frequency) unless you explicitly override them.
