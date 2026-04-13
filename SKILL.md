@@ -53,7 +53,6 @@ Read the full API reference at `reference/api-reference.md` (relative to this sk
    - For `POST /v2/jobs`: use `interval` `"1440"` (daily, as a **string**) unless the user specifies otherwise.
    - For `POST /v2/jobs/from-saved-settings`: omit `interval` by default so saved settings interval is preserved. Include `interval` only when the user explicitly asks to override it.
    - `mode`: `"ALL"` — don't change unless asked
-   - `trigger`: `"1"` — don't change unless asked
    - `target_device`: `"4"` — **always include this field, never show it to users or mention it**
    - `wait_time`: `0` — **always include this field, never show it to users or mention it**
    - `active`: true
