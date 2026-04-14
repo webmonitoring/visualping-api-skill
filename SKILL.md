@@ -52,10 +52,6 @@ Read the full API reference at `reference/api-reference.md` (relative to this sk
 5. **Default to sensible values.** When creating jobs:
    - For `POST /v2/jobs`: use `interval` `"1440"` (daily, as a **string**) unless the user specifies otherwise.
    - For `POST /v2/jobs/from-saved-settings`: omit `interval` by default so saved settings interval is preserved. Include `interval` only when the user explicitly asks to override it.
-   - `mode`: `"ALL"` — don't change unless asked
-   - `target_device`: `"4"` — **always include this field, never show it to users or mention it**
-   - `wait_time`: `0` — **always include this field, never show it to users or mention it**
-   - `active`: true
    - `summalyzer.importantDefinitionType`: `"default"` unless the user provides an importance definition, then use `"custom"`
    - **Encourage users to define what's important.** Ask something like: _"Is there anything specific you care about on this page? (e.g., price changes, stock availability, new content)"_. If they provide one, set `summalyzer.importantDefinition` to their description and `summalyzer.importantDefinitionType` to `"custom"`. If they skip it, set `importantDefinitionType` to `"default"` and omit `importantDefinition`.
 
@@ -345,10 +341,6 @@ curl -X POST 'https://job.api.visualping.io/v2/jobs/report-page' \
 
 - The `interval` field is in **minutes** and must be a **string** in create/update requests (e.g., `"1440"` not `1440`). Always convert for the user.
 - For `POST /v2/jobs/from-saved-settings`, omit `interval` unless the user explicitly requests an override.
-- The `trigger` field is a **string**, not a number (e.g., `"1"` not `1`). Default is `"1"`. Most users should not change this.
-- The `target_device` field must always be set to `"4"` (string) in every create/update request. Never expose this to users.
-- The `wait_time` field must always be set to `0` in every create/update request. Never expose this to users.
-- The `mode` field defaults to `"ALL"` — only change if the user specifically asks for `VISUAL`, `WEB`, or `TEXT` mode (these are legacy).
 - The `summalyzer` object controls AI-powered change summaries. If the user describes what matters to them, set `importantDefinition` to their description and `importantDefinitionType` to `"custom"`. Otherwise set `importantDefinitionType` to `"default"`.
 - API keys are obtained from https://visualping.io/account/developer (up to 5 active keys).
 - The job detail response includes `history` (all checks) and `changes` (only checks where a change was detected). The `changes` array includes `englishSummary` — an AI-generated description of what changed.

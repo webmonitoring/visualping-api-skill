@@ -448,15 +448,6 @@ Each item in `items` represents a single check run for a job:
 | `"1440"`          | Once a day (default) |
 | `"10080"`         | Once a week          |
 
-## Hidden Defaults
-
-These fields must always be included in create/update requests but should never be shown to or configured by users:
-
-| Field           | Value | Notes                                                   |
-| --------------- | ----- | ------------------------------------------------------- |
-| `target_device` | `"4"` | Always include as string `"4"`. Do not expose to users. |
-| `wait_time`     | `0`   | Always include as `0`. Do not expose to users.          |
-
 ## HTTP Status Codes
 
 | Code | Meaning                          |
