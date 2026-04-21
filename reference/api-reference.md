@@ -129,7 +129,7 @@ Content-Type: application/json
 | retention_policy | string | No | `"3"` | History retention policy |
 | alert_error | boolean | No | true | Alert on errors |
 | summalyzer | object | No | — | AI summary configuration (see below) |
-| labelIds | array[int] | No | — | Labels to attach |
+| labelIds | array[int] | No | — | Labels to attach. See §9–13 for managing labels and bulk job↔label assignment. |
 
 #### Notification Object
 
@@ -372,6 +372,158 @@ Each item in `items` represents a single check run for a job:
 - Items with no `changeDetectionLevel` and no `errorLogId` are initial baseline snapshots.
 - Results are sorted newest-first and are interleaved across jobs (not grouped by job).
 - The response is paginated at 100 items — additional pagination parameters may apply.
+
+---
+
+### 8. Launch Job (Run Now)
+```
+POST https://job.api.visualping.io/v2/jobs/launch
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Manually triggers an immediate check for one or more jobs.
+
+#### Request Body
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| jobIds | array[int] | Yes | — | Job IDs to run now |
+| workspaceId | integer | Business | — | Workspace ID |
+| restartSchedule | boolean | No | false | If true, the job's recurring schedule is reset to start from now |
+
+#### Example
+```json
+{ "jobIds": [6024347], "restartSchedule": false, "workspaceId": 2456 }
+```
+
+---
+
+### 9. List Labels
+```
+GET https://job.api.visualping.io/v2/jobs/labels
+Authorization: Bearer <token>
+```
+
+Labels are scoped to the **organisation**, not the workspace.
+
+#### Query Parameters
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| organisationId | integer | Yes | — | Organisation ID (note British spelling) |
+| sortBy | string | No | — | e.g. `alphabetical_asc`, `alphabetical_desc` |
+| computeUsage | int (0/1) | No | 0 | If `1`, each label includes `numOfJobsLabeled` |
+
+---
+
+### 10. Create Labels
+```
+POST https://job.api.visualping.io/v2/jobs/labels
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Creates one or more labels in a single request.
+
+#### Request Body
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| organisationId | integer | Yes | Organisation ID |
+| labels | array[object] | Yes | Labels to create |
+
+**Label object (for creation):**
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | integer | Yes | Use a **negative sentinel** (`-1`, `-2`, …) to indicate a new label; the server assigns the real ID |
+| name | string | Yes | Label name |
+| color | string | Yes | Hex color, e.g. `"#FFFAEB"` |
+| emoji | string | No | Emoji shortcode, e.g. `":new:"` |
+
+#### Example
+```json
+{
+  "organisationId": 2455,
+  "labels": [
+    { "id": -1, "name": "tmp",  "color": "#FFFAEB", "emoji": ":new:" },
+    { "id": -2, "name": "tmp2", "color": "#FDF2FA", "emoji": ":new:" }
+  ]
+}
+```
+
+---
+
+### 11. Update Labels
+```
+PUT https://job.api.visualping.io/v2/jobs/labels
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+#### Request Body
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| organisationId | integer | Yes | Organisation ID |
+| labels | array[object] | Yes | Labels to update; each must use the real (positive) `id` |
+
+`numOfJobsLabeled` is accepted in the payload but is effectively read-only.
+
+#### Example
+```json
+{
+  "organisationId": 2455,
+  "labels": [
+    { "id": 9, "name": "tmp3", "emoji": ":new:", "color": "#FFFAEB", "numOfJobsLabeled": 0 }
+  ]
+}
+```
+
+---
+
+### 12. Delete Label
+```
+DELETE https://job.api.visualping.io/v2/jobs/labels
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+#### Request Body
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | integer | Yes | Label ID to delete (single, not an array) |
+| organisationId | integer | Yes | Organisation ID |
+
+#### Example
+```json
+{ "id": 10, "organisationId": 2455 }
+```
+
+---
+
+### 13. Assign / Unassign Labels on Jobs
+```
+PUT https://job.api.visualping.io/v2/jobs/joblabels
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Bulk add or remove labels across one or more jobs in a single call.
+
+#### Request Body
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| organisationId | integer | Yes | Organisation ID |
+| jobIds | array[int] | Yes | Jobs to update |
+| addLabelIds | array[int] | No | Label IDs to add |
+| removeLabelIds | array[int] | No | Label IDs to remove |
+
+#### Example
+```json
+{
+  "organisationId": 2455,
+  "jobIds": [6024347],
+  "addLabelIds": [9, 10],
+  "removeLabelIds": [12]
+}
+```
 
 ---
 
