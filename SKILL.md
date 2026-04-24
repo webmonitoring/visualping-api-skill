@@ -23,11 +23,12 @@ Read the full API reference at `reference/api-reference.md` (relative to this sk
 
 1. **Ask for the API key first.** Every request needs auth. If the user hasn't provided their API key, ask for it before proceeding. Remind them they can get one at https://visualping.io/account/developer.
 
-2. **Resolve workspace automatically.** When a `workspaceId` is needed:
-   - Call `GET /describe-user` to retrieve the user's available workspaces.
+2. **Resolve workspace and organisation automatically.** When a `workspaceId` or `organisationId` is needed:
+   - Call `GET /describe-user` to retrieve the user's available workspaces and organisation.
    - If the user has **one workspace**, use it automatically.
    - If they have **multiple workspaces**, present the options and let them pick.
    - Never ask the user to manually provide a workspace ID unless the describe-user call fails.
+   - Label endpoints (`/v2/jobs/labels`, `/v2/jobs/joblabels`) use `organisationId` (British spelling), not `workspaceId` — resolve both from `describe-user`.
 
 3. **Ask: generate or execute?** At the start of the interaction, determine the user's preference:
    - **Generate snippet**: Produce a ready-to-run code block the user can copy into their own environment. Ask which language they prefer (curl, Python, JavaScript/Node.js).
@@ -150,113 +151,28 @@ console.log(data);
 
 When a user asks to do something, map it to the right API call(s):
 
-| User wants to...                                                             | API call(s)                                                     |
-| ---------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| "Monitor a URL" / "Watch a page" using saved defaults/preset                 | POST `/v2/jobs/from-saved-settings`                             |
-| "Monitor a URL" / "Watch a page" with custom or minimal direct create fields | POST `/v2/jobs` (create job)                                    |
-| "Create from saved settings" / "Use preset/default preset"                   | POST `/v2/jobs/from-saved-settings`                             |
-| "List my monitors" / "Show my jobs"                                          | GET `/v2/jobs`                                                  |
-| "Check status of a monitor"                                                  | GET `/v2/jobs/{jobId}`                                          |
-| "See what changed" / "Get history"                                           | GET `/v2/jobs/{jobId}` → look at `history` and `changes` arrays |
-| "Show recent activity across all jobs" / "What changed lately?"              | POST `/v2/jobs/report-page`                                     |
-| "Show me a feed / dashboard / timeline of checks"                            | POST `/v2/jobs/report-page`                                     |
-| "Get an activity digest" / "Audit log of checks"                             | POST `/v2/jobs/report-page`                                     |
-| "Update a monitor" / "Change frequency"                                      | PUT `/v2/jobs/{jobId}`                                          |
-| "Delete / remove a monitor"                                                  | DELETE `/v2/jobs/{jobId}`                                       |
-| "Pause a monitor"                                                            | PUT `/v2/jobs/{jobId}` with `{ "active": false }`               |
-| "Resume a monitor"                                                           | PUT `/v2/jobs/{jobId}` with `{ "active": true }`                |
-| "Get my account info"                                                        | GET `/describe-user`                                            |
-| "Authenticate" / "Get a token"                                               | POST `/v2/token`                                                |
-| "Set up Slack/webhook notifications"                                         | Include `notification` object in create/update job              |
-
-## Create From Saved Settings (`/v2/jobs/from-saved-settings`)
-
-Use this endpoint only when the user wants preset-based creation and the business + saved-settings conditions are satisfied.
-
-Availability:
-
-- Business users only.
-- Requires saved settings to exist (specific `savedJobSettingsId` or a default preset).
-- Otherwise, use `POST /v2/jobs` instead.
-
-### Request shape
-
-```json
-{
-  "workspaceId": 137389,
-  "url": "https://example.com",
-  "savedJobSettingsId": 12345,
-  "description": "Weekly check from preset"
-}
-```
-
-Notes:
-
-- `workspaceId` and `url` are required.
-- `savedJobSettingsId` and `description` are optional.
-- `interval` is optional and should only be included when explicitly overriding saved settings.
-- If `savedJobSettingsId` is omitted, the workspace default preset is used.
-
-### curl
-
-```bash
-# Create a monitor using saved settings (preset/default preset)
-curl -X POST 'https://job.api.visualping.io/v2/jobs/from-saved-settings' \
-  -H 'Authorization: Bearer YOUR_API_KEY' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "workspaceId": YOUR_WORKSPACE_ID,
-    "url": "https://example.com",
-    "savedJobSettingsId": YOUR_SAVED_JOB_SETTINGS_ID,
-    "description": "Test job"
-  }'
-```
-
-### Python
-
-```python
-import requests
-
-API_KEY = "YOUR_API_KEY"
-url = "https://job.api.visualping.io/v2/jobs/from-saved-settings"
-headers = {
-    "Authorization": f"Bearer {API_KEY}",
-    "Content-Type": "application/json",
-}
-payload = {
-    "workspaceId": 137389,
-    "url": "https://example.com",
-    "savedJobSettingsId": 12345,  # optional
-    "description": "Test job",    # optional
-}
-
-response = requests.post(url, headers=headers, json=payload)
-print(response.status_code)
-print(response.json())
-```
-
-### JavaScript (fetch)
-
-```javascript
-const API_KEY = "YOUR_API_KEY";
-
-const response = await fetch("https://job.api.visualping.io/v2/jobs/from-saved-settings", {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${API_KEY}`,
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    workspaceId: 137389,
-    url: "https://example.com",
-    savedJobSettingsId: 12345, // optional
-    description: "Test job", // optional
-  }),
-});
-
-const data = await response.json();
-console.log(response.status, data);
-```
+| User wants to... | API call(s) |
+|-------------------|-------------|
+| "Monitor a URL" / "Watch a page" | POST `/v2/jobs` (create job) |
+| "List my monitors" / "Show my jobs" | GET `/v2/jobs` |
+| "Check status of a monitor" | GET `/v2/jobs/{jobId}` |
+| "See what changed" / "Get history" | GET `/v2/jobs/{jobId}` → look at `history` and `changes` arrays |
+| "Show recent activity across all jobs" / "What changed lately?" | POST `/v2/jobs/report-page` |
+| "Show me a feed / dashboard / timeline of checks" | POST `/v2/jobs/report-page` |
+| "Get an activity digest" / "Audit log of checks" | POST `/v2/jobs/report-page` |
+| "Update a monitor" / "Change frequency" | PUT `/v2/jobs/{jobId}` |
+| "Delete / remove a monitor" | DELETE `/v2/jobs/{jobId}` |
+| "Pause a monitor" | PUT `/v2/jobs/{jobId}` with `{ "active": false }` |
+| "Resume a monitor" | PUT `/v2/jobs/{jobId}` with `{ "active": true }` |
+| "Run a job now" / "Check it immediately" / "Trigger a manual run" | POST `/v2/jobs/launch` |
+| "List labels" / "Show tags" | GET `/v2/jobs/labels` |
+| "Create a label" / "Add new tags" | POST `/v2/jobs/labels` |
+| "Rename / recolor a label" | PUT `/v2/jobs/labels` |
+| "Delete a label" | DELETE `/v2/jobs/labels` |
+| "Tag / untag a monitor" / "Add labels to a job" | PUT `/v2/jobs/joblabels` |
+| "Get my account info" | GET `/describe-user` |
+| "Authenticate" / "Get a token" | POST `/v2/token` |
+| "Set up Slack/webhook notifications" | Include `notification` object in create/update job |
 
 ## The `report-page` endpoint
 
@@ -344,3 +260,6 @@ curl -X POST 'https://job.api.visualping.io/v2/jobs/report-page' \
 - The `summalyzer` object controls AI-powered change summaries. If the user describes what matters to them, set `importantDefinition` to their description and `importantDefinitionType` to `"custom"`. Otherwise set `importantDefinitionType` to `"default"`.
 - API keys are obtained from https://visualping.io/account/developer (up to 5 active keys).
 - The job detail response includes `history` (all checks) and `changes` (only checks where a change was detected). The `changes` array includes `englishSummary` — an AI-generated description of what changed.
+- **Labels are organisation-scoped**, not workspace-scoped. Label endpoints take `organisationId` (note British spelling), while job endpoints take `workspaceId`. These are distinct IDs — resolve both via `GET /describe-user`.
+- **Creating labels uses negative sentinel IDs** — set `id: -1`, `-2`, etc. on new labels in `POST /v2/jobs/labels`; the server assigns real IDs in the response.
+- **Running a job manually** (`POST /v2/jobs/launch`) triggers an immediate check but leaves the recurring schedule intact. Set `restartSchedule: true` only if the user wants the cadence to reset from now.
