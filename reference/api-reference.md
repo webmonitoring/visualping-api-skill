@@ -249,6 +249,75 @@ Creates a job by reusing saved job settings (preset/default preset).
 
 ---
 
+### 4b. Bulk Create Jobs
+
+```
+PUT https://job.api.visualping.io/v2/jobs/bulk
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Creates many jobs in a single request, applying a shared `settings` block to every URL in the `jobs` array. Use this for importing lists of URLs (e.g. CSV upload, onboarding) where every job should share the same monitoring configuration.
+
+Despite using `PUT`, this endpoint **creates** new jobs — it does not update existing ones.
+
+#### Request Body
+
+| Field        | Type          | Required       | Description                                                                                       |
+| ------------ | ------------- | -------------- | ------------------------------------------------------------------------------------------------- |
+| settings     | object        | Yes            | Shared configuration applied to every job. Same shape as Create Job body (without `url`).         |
+| jobs         | array[object] | Yes            | One entry per job to create. Each entry must include `url`; per-job overrides are also supported. |
+| workspaceId  | integer       | Yes (business) | Workspace where the jobs will be created                                                          |
+| initToBlank  | boolean       | No             | If `true`, jobs start with a blank baseline (no initial screenshot used as reference)             |
+| dnt          | boolean       | No             | Do-not-track flag forwarded to the browser                                                        |
+| vpe          | boolean       | No             | Visualping engine flag (internal — leave at the value the UI sends if unsure)                     |
+
+The `settings` object accepts every field documented under §3 Create Job (e.g. `mode`, `interval`, `trigger`, `notification`, `preactions`, `labelIds`, `enable_cookies_and_ad_blocker`, `target_device`, `wait_time`, etc.).
+
+Each entry in `jobs` must contain at least `url`. Any field accepted by Create Job may be included on a per-job basis to override the shared `settings` for that one URL (e.g. a custom `description` or `xpath`).
+
+#### Request Example
+
+```json
+{
+  "workspaceId": 4139,
+  "initToBlank": false,
+  "dnt": true,
+  "vpe": true,
+  "settings": {
+    "active": true,
+    "mode": "ALL",
+    "interval": "1440",
+    "trigger": "0.01",
+    "notification_threshold": 0.01,
+    "target_device": "4",
+    "wait_time": 0,
+    "enable_cookies_and_ad_blocker": true,
+    "alert_error": false,
+    "labelIds": [142819],
+    "preactions": {
+      "active": true,
+      "actions": [{ "click": "home" }]
+    },
+    "notification": {
+      "enableSmsAlert": false,
+      "enableEmailAlert": true,
+      "onlyImportantAlerts": true,
+      "config": {
+        "webhook": { "url": "", "active": false, "notificationType": "webhook" }
+      }
+    },
+    "summalyzer": { "importantDefinitionType": "none" }
+  },
+  "jobs": [
+    { "url": "https://example.com/page-1" },
+    { "url": "https://example.com/page-2", "description": "Pricing page" }
+  ]
+}
+```
+
+---
+
 ### 5. Get Job Details & History
 
 ```
