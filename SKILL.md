@@ -154,6 +154,7 @@ When a user asks to do something, map it to the right API call(s):
 | User wants to... | API call(s) |
 |-------------------|-------------|
 | "Monitor a URL" / "Watch a page" | POST `/v2/jobs` (create job) |
+| "Bulk import URLs" / "Create many monitors at once" / "Import a list" | PUT `/v2/jobs/bulk` |
 | "List my monitors" / "Show my jobs" | GET `/v2/jobs` |
 | "Check status of a monitor" | GET `/v2/jobs/{jobId}` |
 | "See what changed" / "Get history" | GET `/v2/jobs/{jobId}` → look at `history` and `changes` arrays |
