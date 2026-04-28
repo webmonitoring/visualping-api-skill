@@ -269,8 +269,6 @@ Despite using `PUT`, this endpoint **creates** new jobs — it does not update e
 | jobs         | array[object] | Yes            | One entry per job to create. Each entry must include `url`; per-job overrides are also supported. |
 | workspaceId  | integer       | Yes (business) | Workspace where the jobs will be created                                                          |
 | initToBlank  | boolean       | No             | If `true`, jobs start with a blank baseline (no initial screenshot used as reference)             |
-| dnt          | boolean       | No             | Do-not-track flag forwarded to the browser                                                        |
-| vpe          | boolean       | No             | Visualping engine flag (internal — leave at the value the UI sends if unsure)                     |
 
 The `settings` object accepts every field documented under §3 Create Job (e.g. `mode`, `interval`, `trigger`, `notification`, `preactions`, `labelIds`, `enable_cookies_and_ad_blocker`, `target_device`, `wait_time`, etc.).
 
@@ -282,8 +280,6 @@ Each entry in `jobs` must contain at least `url`. Any field accepted by Create J
 {
   "workspaceId": 4139,
   "initToBlank": false,
-  "dnt": true,
-  "vpe": true,
   "settings": {
     "active": true,
     "mode": "ALL",
