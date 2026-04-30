@@ -139,7 +139,7 @@ Content-Type: application/json
 | retention_policy | string | No | `"3"` | History retention policy |
 | alert_error | boolean | No | true | Alert on errors |
 | summalyzer | object | No | — | AI summary configuration (see below) |
-| labelIds | array[int] | No | — | Labels to attach. See §9–13 for managing labels and bulk job↔label assignment. |
+| labelIds | array[int] | No | — | Labels to attach. See §11–15 for managing labels and bulk job↔label assignment. |
 
 #### Notification Object
 
@@ -249,7 +249,7 @@ Creates a job by reusing saved job settings (preset/default preset).
 
 ---
 
-### 4b. Bulk Create Jobs
+### 5. Bulk Create Jobs
 
 ```
 PUT https://job.api.visualping.io/v2/jobs/bulk
@@ -314,7 +314,7 @@ Each entry in `jobs` must contain at least `url`. Any field accepted by Create J
 
 ---
 
-### 5. Get Job Details & History
+### 6. Get Job Details & History
 
 ```
 GET https://job.api.visualping.io/v2/jobs/{jobId}
@@ -396,7 +396,7 @@ Authorization: Bearer <token>
 
 ---
 
-### 6. Update Job
+### 7. Update Job
 
 ```
 PUT https://job.api.visualping.io/v2/jobs/{jobId}
@@ -408,7 +408,7 @@ Request body is the same shape as Create Job. Only include fields you want to ch
 
 ---
 
-### 7. Delete Job
+### 8. Delete Job
 
 ```
 DELETE https://job.api.visualping.io/v2/jobs/{jobId}
@@ -423,7 +423,7 @@ Authorization: Bearer <token>
 
 ---
 
-### 8. Report Page (Activity Feed)
+### 9. Report Page (Activity Feed)
 
 ```
 POST https://job.api.visualping.io/v2/jobs/report-page
@@ -500,7 +500,7 @@ Each item in `items` represents a single check run for a job:
 
 ---
 
-### 8. Launch Job (Run Now)
+### 10. Launch Job (Run Now)
 ```
 POST https://job.api.visualping.io/v2/jobs/launch
 Authorization: Bearer <token>
@@ -523,7 +523,7 @@ Manually triggers an immediate check for one or more jobs.
 
 ---
 
-### 9. List Labels
+### 11. List Labels
 ```
 GET https://job.api.visualping.io/v2/jobs/labels
 Authorization: Bearer <token>
@@ -540,7 +540,7 @@ Labels are scoped to the **organisation**, not the workspace.
 
 ---
 
-### 10. Create Labels
+### 12. Create Labels
 ```
 POST https://job.api.visualping.io/v2/jobs/labels
 Authorization: Bearer <token>
@@ -576,7 +576,7 @@ Creates one or more labels in a single request.
 
 ---
 
-### 11. Update Labels
+### 13. Update Labels
 ```
 PUT https://job.api.visualping.io/v2/jobs/labels
 Authorization: Bearer <token>
@@ -603,7 +603,7 @@ Content-Type: application/json
 
 ---
 
-### 12. Delete Label
+### 14. Delete Label
 ```
 DELETE https://job.api.visualping.io/v2/jobs/labels
 Authorization: Bearer <token>
@@ -623,7 +623,7 @@ Content-Type: application/json
 
 ---
 
-### 13. Assign / Unassign Labels on Jobs
+### 15. Assign / Unassign Labels on Jobs
 ```
 PUT https://job.api.visualping.io/v2/jobs/joblabels
 Authorization: Bearer <token>
