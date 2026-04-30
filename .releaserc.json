@@ -1,0 +1,18 @@
+{
+  "branches": ["develop"],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "visualping-api.skill",
+            "label": "visualping-api.skill"
+          }
+        ]
+      }
+    ]
+  ]
+}
