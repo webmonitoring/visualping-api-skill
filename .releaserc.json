@@ -5,7 +5,8 @@
       "releaseRules": [
         { "type": "chore", "release": "minor" },
         { "type": "feat", "release": "minor" },
-        { "type": "fix", "release": "patch" }
+        { "type": "fix", "release": "patch" },
+        { "release": "minor" }
       ]
     }],
     "@semantic-release/release-notes-generator",
