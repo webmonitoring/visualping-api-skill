@@ -34,7 +34,7 @@ jobs:
             @semantic-release/github
 
       - name: Build skill file
-        run: zip -j visualping-api.skill SKILL.md reference/api-reference.md
+        run: zip visualping-api.skill SKILL.md reference/api-reference.md
 
       - name: Release
         env:
