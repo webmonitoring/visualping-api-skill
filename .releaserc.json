@@ -4,6 +4,12 @@
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "sed -i 's/^version: \"[^\"]*\"/version: \"${nextRelease.version}\"/' SKILL.md && zip visualping-api.skill SKILL.md reference/api-reference.md"
+      }
+    ],
+    [
       "@semantic-release/github",
       {
         "assets": [
