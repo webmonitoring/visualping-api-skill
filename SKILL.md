@@ -1,6 +1,6 @@
 ---
 name: visualping-api
-version: "1.2.0"
+version: "0.0.0"
 description: >
   Generate ready-to-run code snippets — or execute API calls directly — for the Visualping API
   (web page change monitoring). Use this skill whenever a user asks about the Visualping API,
