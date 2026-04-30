@@ -1,7 +1,13 @@
 {
   "branches": ["develop"],
   "plugins": [
-    "@semantic-release/commit-analyzer",
+    ["@semantic-release/commit-analyzer", {
+      "releaseRules": [
+        { "type": "chore", "release": "minor" },
+        { "type": "feat", "release": "minor" },
+        { "type": "fix", "release": "patch" }
+      ]
+    }],
     "@semantic-release/release-notes-generator",
     [
       "@semantic-release/exec",
