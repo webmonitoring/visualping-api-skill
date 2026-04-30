@@ -1,7 +1,5 @@
 # Visualping API
 
-**Version: 1.2.0**
-
 Documentation for API plus a skill that lets you interact with the [Visualping API](https://visualping.io) directly from LLMs — create monitors, list jobs, check change history, and more.
 
 ## What the skill does
@@ -42,10 +40,6 @@ Once installed, just talk to LLMs naturally:
 - _"Set up a Slack notification for my monitor"_
 - _"Create a monitor that checks every hour"_
 - _"Create a monitor with my saved settings"_
-- _"Bulk import these 50 URLs"_
-- _"Run my monitor right now"_
-- _"Show me recent activity across all my monitors"_
-- _"Create a label called 'Competitors' and tag these jobs"_
 
 LLM will ask for your API key if you haven't provided one, then either generate a code snippet or execute the call directly — your choice.
 
@@ -58,17 +52,9 @@ LLM will ask for your API key if you haven't provided one, then either generate 
 | List jobs                      | `GET /v2/jobs`                      |
 | Create job                     | `POST /v2/jobs`                     |
 | Create job from saved settings | `POST /v2/jobs/from-saved-settings` |
-| Bulk create jobs               | `PUT /v2/jobs/bulk`                 |
 | Get job details & history      | `GET /v2/jobs/{jobId}`              |
 | Update job                     | `PUT /v2/jobs/{jobId}`              |
 | Delete job                     | `DELETE /v2/jobs/{jobId}`           |
-| Activity feed (all jobs)       | `POST /v2/jobs/report-page`         |
-| Run job immediately            | `POST /v2/jobs/launch`              |
-| List labels                    | `GET /v2/jobs/labels`               |
-| Create labels                  | `POST /v2/jobs/labels`              |
-| Update labels                  | `PUT /v2/jobs/labels`               |
-| Delete label                   | `DELETE /v2/jobs/labels`            |
-| Assign/unassign labels on jobs | `PUT /v2/jobs/joblabels`            |
 
 ## Direct execution
 

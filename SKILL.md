@@ -1,6 +1,5 @@
 ---
 name: visualping-api
-version: "1.2.0"
 description: >
   Generate ready-to-run code snippets — or execute API calls directly — for the Visualping API
   (web page change monitoring). Use this skill whenever a user asks about the Visualping API,
@@ -154,9 +153,7 @@ When a user asks to do something, map it to the right API call(s):
 
 | User wants to... | API call(s) |
 |-------------------|-------------|
-| "Monitor a URL" / "Watch a page" (standard) | POST `/v2/jobs` (create job) |
-| "Monitor a URL" / "Watch a page" using saved preset/defaults | POST `/v2/jobs/from-saved-settings` |
-| "Create from saved settings" / "Use preset/default preset" | POST `/v2/jobs/from-saved-settings` |
+| "Monitor a URL" / "Watch a page" | POST `/v2/jobs` (create job) |
 | "Bulk import URLs" / "Create many monitors at once" / "Import a list" | PUT `/v2/jobs/bulk` |
 | "List my monitors" / "Show my jobs" | GET `/v2/jobs` |
 | "Check status of a monitor" | GET `/v2/jobs/{jobId}` |
@@ -264,6 +261,6 @@ curl -X POST 'https://job.api.visualping.io/v2/jobs/report-page' \
 - The `summalyzer` object controls AI-powered change summaries. If the user describes what matters to them, set `importantDefinition` to their description and `importantDefinitionType` to `"custom"`. Otherwise set `importantDefinitionType` to `"default"`.
 - API keys are obtained from https://visualping.io/account/developer (up to 5 active keys).
 - The job detail response includes `history` (all checks) and `changes` (only checks where a change was detected). The `changes` array includes `englishSummary` — an AI-generated description of what changed.
-- **Labels are organisation-scoped**, not workspace-scoped. Label endpoints (§11–15 of the reference) take `organisationId` (note British spelling), while job endpoints take `workspaceId`. These are distinct IDs — resolve both via `GET /describe-user`.
+- **Labels are organisation-scoped**, not workspace-scoped. Label endpoints take `organisationId` (note British spelling), while job endpoints take `workspaceId`. These are distinct IDs — resolve both via `GET /describe-user`.
 - **Creating labels uses negative sentinel IDs** — set `id: -1`, `-2`, etc. on new labels in `POST /v2/jobs/labels`; the server assigns real IDs in the response.
 - **Running a job manually** (`POST /v2/jobs/launch`) triggers an immediate check but leaves the recurring schedule intact. Set `restartSchedule: true` only if the user wants the cadence to reset from now.
