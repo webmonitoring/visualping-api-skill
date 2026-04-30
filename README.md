@@ -1,7 +1,5 @@
 # Visualping API
 
-**Version: 1.2.0**
-
 Documentation for API plus a skill that lets you interact with the [Visualping API](https://visualping.io) directly from LLMs — create monitors, list jobs, check change history, and more.
 
 ## What the skill does
