@@ -73,7 +73,137 @@ GET https://account.api.visualping.io/describe-user
 Authorization: Bearer <token>
 ```
 
-Returns information about the authenticated user.
+Returns information about the authenticated user, including their profile and workspaces. Business users also receive an `organisation` section.
+
+#### Response Fields
+
+| Field                     | Type    | Description                                                |
+| ------------------------- | ------- | ---------------------------------------------------------- |
+| `userId`                  | integer | Unique user ID                                             |
+| `emailAddress`            | string  | User's email address                                       |
+| `country`                 | string  | User's country                                             |
+| `locale`                  | string  | Locale code (e.g. `en`)                                    |
+| `timeZone`                | string  | User's time zone (e.g. `America/Vancouver`)                |
+| `loginCount`              | integer | Total number of logins                                     |
+| `signUpAgeDays`           | integer | Days since sign-up                                         |
+| `intentForBusiness`       | boolean | Whether the user signed up for business use                |
+| `googleChatIntegrated`    | boolean | Google Chat integration status                             |
+| `googleSheetsIntegrated`  | boolean | Google Sheets integration status                           |
+| `slackInstallationStatus` | object  | Slack installation details                                 |
+| `refreshToken`            | boolean | Whether a refresh token is present                         |
+| `organisation`            | object  | Organisation details — **business users only** (see below) |
+| `workspaces`              | array   | List of workspaces the user belongs to (see below)         |
+
+##### `organisation` object
+
+| Field                         | Type              | Description                                    |
+| ----------------------------- | ----------------- | ---------------------------------------------- |
+| `id`                          | integer           | Organisation ID                                |
+| `name`                        | string            | Organisation name                              |
+| `timeZone`                    | string            | Organisation time zone                         |
+| `role`                        | string            | User's role in the organisation (e.g. `ADMIN`) |
+| `plan`                        | object            | Current subscription plan details              |
+| `userHasPersonalSubscription` | boolean           | Whether the user has a personal subscription   |
+| `accountFeatures`             | object            | Feature flags and limits for the organisation  |
+| `balances`                    | object            | Credit balance and renewal info                |
+| `counts`                      | object            | Active job and user counts                     |
+| `trialStartDate`              | string (ISO 8601) | Trial start date                               |
+| `trialEndDate`                | string (ISO 8601) | Trial end date                                 |
+| `orgCreatedAt`                | string (ISO 8601) | Organisation creation date                     |
+
+##### `workspaces` array items
+
+| Field                 | Type    | Description                                       |
+| --------------------- | ------- | ------------------------------------------------- |
+| `id`                  | integer | Workspace ID                                      |
+| `name`                | string  | Workspace name                                    |
+| `timeZone`            | string  | Workspace time zone                               |
+| `role`                | string  | User's role in this workspace (e.g. `ADMIN`)      |
+| `plan`                | object  | Workspace subscription plan                       |
+| `accountFeatures`     | object  | Feature flags and limits for this workspace       |
+| `balances`            | object  | Credit balance including `inOverConsumption` flag |
+| `counts`              | object  | Active job and user counts                        |
+| `notificationMembers` | array   | List of CC email recipients for notifications     |
+| `status`              | string  | Workspace status (e.g. `active`)                  |
+
+#### Example Response
+
+```json
+{
+  "userId": 123456,
+  "emailAddress": "user@example.com",
+  "country": "Canada",
+  "locale": "en",
+  "timeZone": "America/Vancouver",
+  "loginCount": 77,
+  "slackInstallationStatus": {},
+  "refreshToken": false,
+  "organisation": {
+    "id": 137388,
+    "name": "Visualping",
+    "timeZone": "America/Vancouver",
+    "role": "ADMIN",
+    "plan": {
+      "name": "trial_2022.1_active",
+      "type": "plan",
+      "subType": "trial_active",
+      "credits": 500,
+      "billingPeriod": "monthly",
+      "label": "Free trial"
+    },
+    "userHasPersonalSubscription": false,
+    "accountFeatures": {
+      "reports": { "enabled": true },
+      "exports": { "enabled": true },
+      "bulkImport": { "enabled": true },
+      "ccEmails": { "enabled": true, "maxAddressCount": 5 },
+      "sms": { "enabled": true },
+      "advancedNotifications": { "enabled": true },
+      "maxActiveJobsPerWorkspace": { "value": 25 },
+      "maxJobFrequency": { "value": 1 },
+      "emailSupport": { "enabled": true },
+      "dedicatedSupport": { "enabled": true }
+    },
+    "balances": {
+      "nextCreditRenewalAt": "2026-06-11T19:19:59.170Z",
+      "estimatedMonthlyConsumption": 774
+    },
+    "counts": {
+      "activeJobCount": 2,
+      "activeJobFreeCount": 23,
+      "activeJobOverflow": false,
+      "activeUserCount": 4,
+      "activeUserFreeCount": 6,
+      "activeUserOverflow": false
+    },
+    "trialStartDate": "2026-05-07T19:19:59.170Z",
+    "trialEndDate": "2026-05-21T19:19:59.170Z",
+    "orgCreatedAt": "2026-05-07T19:19:59.000Z"
+  },
+  "workspaces": [
+    {
+      "id": 137389,
+      "name": "Workspace #1",
+      "timeZone": "America/Vancouver",
+      "role": "ADMIN",
+      "plan": { "name": "trial_2022.1_active", "label": "Free trial" },
+      "balances": {
+        "credits": 146,
+        "nextCreditRenewalAt": "2055-11-21T19:19:59.170Z",
+        "estimatedMonthlyConsumption": 732,
+        "inOverConsumption": true
+      },
+      "counts": {
+        "activeJobCount": 1,
+        "activeJobFreeCount": 499999,
+        "activeJobOverflow": false
+      },
+      "notificationMembers": [{ "type": "ccEmail", "value": "user@example.com", "confirmed": true }],
+      "status": "active"
+    }
+  ]
+}
+```
 
 ---
 
