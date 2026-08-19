@@ -216,22 +216,22 @@ Authorization: Bearer <token>
 
 #### Query Parameters
 
-| Parameter                 | Type          | Required             | Default                     | Description                                                          |
-| ------------------------- | ------------- | -------------------- | --------------------------- | -------------------------------------------------------------------- |
-| workspaceId               | integer       | Yes (business users) | —                           | Workspace ID                                                         |
-| mode                      | string        | No                   | `normal`                    | Output mode: `counts_only`, `ids_and_wsIds`, `ids_only`, `normal`    |
-| pageIndex                 | integer       | No                   | 0                           | Page number (0-based)                                                |
-| pageSize                  | integer       | No                   | 100                         | Jobs per page (min 1)                                                |
-| activeFilter              | array[int]    | No                   | —                           | Filter: `0` (paused), `1` (active)                                   |
-| modeFilter                | array[string] | No                   | —                           | Filter by mode: `VISUAL`, `WEB`, `TEXT`                              |
-| frequencyFilter           | array[string] | No                   | —                           | Filter by frequency bucket                                           |
-| hasAdvancedScheduleFilter | int (0/1)     | No                   | —                           | Filter by advanced schedule presence                                 |
-| eventFilter               | string        | No                   | —                           | Filter by event: `changed`, `changedImportant`, `errored`, `checked` |
-| dateFilter                | string        | No                   | —                           | Time interval for eventFilter                                        |
-| dateFilterStart           | string        | No                   | —                           | ISO date, required if dateFilter is `since_custom_date`              |
-| fullTextSearchFilter      | string        | No                   | —                           | Search in URLs/descriptions                                          |
-| labelsFilter              | array[int]    | No                   | —                           | Filter by label IDs                                                  |
-| sortBy                    | array[string] | No                   | `active_first,lastrun_desc` | Sort order                                                           |
+| Parameter                   | Type          | Required             | Default                     | Description                                                          |
+| --------------------------- | ------------- | -------------------- | --------------------------- | -------------------------------------------------------------------- |
+| `workspaceId`               | integer       | Yes (business users) | —                           | Workspace ID                                                         |
+| `mode`                      | string        | No                   | `normal`                    | Output mode: `counts_only`, `ids_and_wsIds`, `ids_only`, `normal`    |
+| `pageIndex`                 | integer       | No                   | 0                           | Page number (0-based)                                                |
+| `pageSize`                  | integer       | No                   | 100                         | Jobs per page (min 1)                                                |
+| `activeFilter`              | array[int]    | No                   | —                           | Filter: `0` (paused), `1` (active)                                   |
+| `modeFilter`                | array[string] | No                   | —                           | Filter by mode: `VISUAL`, `WEB`, `TEXT`                              |
+| `frequencyFilter`           | array[string] | No                   | —                           | Filter by frequency bucket                                           |
+| `hasAdvancedScheduleFilter` | int (0/1)     | No                   | —                           | Filter by advanced schedule presence                                 |
+| `eventFilter`               | string        | No                   | —                           | Filter by event: `changed`, `changedImportant`, `errored`, `checked` |
+| `dateFilter`                | string        | No                   | —                           | Time interval for eventFilter                                        |
+| `dateFilterStart`           | string        | No                   | —                           | ISO date, required if dateFilter is `since_custom_date`              |
+| `fullTextSearchFilter`      | string        | No                   | —                           | Search in URLs/descriptions                                          |
+| `labelsFilter`              | array[int]    | No                   | —                           | Filter by label IDs                                                  |
+| `sortBy`                    | array[string] | No                   | `active_first,lastrun_desc` | Sort order                                                           |
 
 **sortBy options:** `id_asc`, `id_desc`, `created_asc`, `created_desc`, `lastrun_asc`, `lastrun_desc`, `active_first`, `inactive_first`, `frequency_asc`, `frequency_desc`, `alphabetical_asc`, `alphabetical_desc`, `last_diff_detected_asc`, `last_diff_detected_desc`
 
@@ -247,30 +247,30 @@ Content-Type: application/json
 
 #### Request Body
 
-| Field | Type | Required | Default  | Description                                                                                                                                              |
-|-------|------|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| workspaceId | integer | Yes (business) | —        | Workspace ID                                                                                                                                             |
-| url | string | **Yes** | —        | URL to monitor                                                                                                                                           |
-| description | string | No | —        | Human-readable label for the job                                                                                                                         |
-| mode | string | No | `ALL`    | Monitor mode. Options: `VISUAL`, `WEB`, `TEXT`, `ALL`. Default `ALL` — most users should not change this.                                                |
-| active | boolean | No | true     | Whether the job starts active                                                                                                                            |
-| interval | string | No | `"1440"` | Check frequency in **minutes** (as a string). Default `"1440"` (once per day). Common values: `"5"`, `"15"`, `"30"`, `"60"`, `"360"`, `"720"`, `"1440"`. |
-| trigger | string | No | `"1"` | Sensitivity threshold. Default `"1"`. Most users should not change this. |
-| crop | object | No | — | Screen region to monitor: `{ x, y, width, height }` |
-| proxy_id | integer | No | — | Proxy to use |
-| xpath | string | No | — | XPath or CSS selector to target a specific element |
-| keyword_action | string | No | `ALL` | Keyword filter mode |
-| keywords | string | No | — | Keywords to filter changes |
-| disable_js | boolean | No | false | Disable JavaScript rendering |
-| enable_cookies_and_ad_blocker | boolean | No | false | Enable cookies and ad blocking |
-| preactions | object | No | — | Actions to perform before checking (click, type, etc.) |
-| advanced_schedule | object | No | — | Restrict checks to specific times/days |
-| notification | object | No | — | Notification configuration (see below) |
-| retention_policy | string | No | `"3"` | History retention policy |
-| alert_on_error | object\|null | No | default threshold | Error alerting configuration (see below) |
-| alert_error | boolean | No | — | **Deprecated** alias for `alert_on_error`. `true` → `{ "change_baseline": true }`, `false` → reset to the default threshold (it cannot turn error alerts off). Ignored when `alert_on_error` is present in the same request. |
-| summalyzer | object | No | — | AI summary configuration (see below) |
-| labelIds | array[int] | No | — | Labels to attach. See §11–15 for managing labels and bulk job↔label assignment. |
+| Field | Type | Required | Default  | Description    |
+|-------|------|----------|----------|----------------|
+| `workspaceId` | integer | Yes (business) | —        | Workspace ID                                                                                                                                             |
+| `url` | string | **Yes** | —        | URL to monitor                                                                                                                                           |
+| `description` | string | No | —        | Human-readable label for the job                                                                                                                         |
+| `mode` | string | No | `ALL`    | Monitor mode. Options: `VISUAL`, `WEB`, `TEXT`, `ALL`. Default `ALL` — most users should not change this.                                                |
+| `active` | boolean | No | true     | Whether the job starts active                                                                                                                            |
+| `interval` | string | No | `"1440"` | Check frequency in **minutes** (as a string). Default `"1440"` (once per day). Common values: `"5"`, `"15"`, `"30"`, `"60"`, `"360"`, `"720"`, `"1440"`. |
+| `trigger` | string | No | `"1"` | Sensitivity threshold. Default `"1"`. Most users should not change this. |
+| `crop` | object | No | — | Screen region to monitor: `{ x, y, width, height }` |
+| `proxy_id` | integer | No | — | Proxy to use |
+| `xpath` | string | No | — | XPath or CSS selector to target a specific element |
+| `keyword_action` | string | No | `ALL` | Keyword filter mode |
+| `keywords` | string | No | — | Keywords to filter changes |
+| `disable_js` | boolean | No | false | Disable JavaScript rendering |
+| `enable_cookies_and_ad_blocker` | boolean | No | false | Enable cookies and ad blocking |
+| `preactions` | object | No | — | Actions to perform before checking (click, type, etc.) |
+| `advanced_schedule` | object | No | — | Restrict checks to specific times/days |
+| `notification` | object | No | — | Notification configuration (see below) |
+| `retention_policy` | string | No | `"3"` | History retention policy |
+| `alert_on_error` | object\|null | No | default threshold | Error alerting configuration (see below) |
+| `alert_error` | boolean | No | — | **Deprecated** alias for `alert_on_error`. `true` → `{ "change_baseline": true }`, `false` → reset to the default threshold (it cannot turn error alerts off). Ignored when `alert_on_error` is present in the same request. |
+| `summalyzer` | object | No | — | AI summary configuration (see below) |
+| `labelIds` | array[int] | No | — | Labels to attach. See §11–15 for managing labels and bulk job↔label assignment. |
 
 #### Notification Object
 
@@ -378,11 +378,11 @@ Creates a job by reusing saved job settings (preset/default preset).
 
 | Field              | Type    | Required       | Description                                                                                    |
 | ------------------ | ------- | -------------- | ---------------------------------------------------------------------------------------------- |
-| workspaceId        | integer | Yes (business) | ID of the workspace where the job will be added                                                |
-| url                | string  | **Yes**        | URL to monitor                                                                                 |
-| savedJobSettingsId | integer | No             | Saved settings ID to apply; if omitted, uses workspace default preset                          |
-| description        | string  | No             | Human-readable label for the job                                                               |
-| interval           | string  | No             | Optional override (minutes as string). Only include when explicitly overriding saved settings. |
+| `workspaceId`        | integer | Yes (business) | ID of the workspace where the job will be added                                                |
+| `url`                | string  | **Yes**        | URL to monitor                                                                                 |
+| `savedJobSettingsId` | integer | No             | Saved settings ID to apply; if omitted, uses workspace default preset                          |
+| `description`        | string  | No             | Human-readable label for the job                                                               |
+| `interval`           | string  | No             | Optional override (minutes as string). Only include when explicitly overriding saved settings. |
 
 #### Request Example
 
@@ -411,12 +411,12 @@ Despite using `PUT`, this endpoint **creates** new jobs — it does not update e
 
 #### Request Body
 
-| Field        | Type          | Required       | Description                                                                                       |
-| ------------ | ------------- | -------------- | ------------------------------------------------------------------------------------------------- |
-| settings     | object        | Yes            | Shared configuration applied to every job. Same shape as Create Job body (without `url`).         |
-| jobs         | array[object] | Yes            | One entry per job to create. Each entry must include `url`; per-job overrides are also supported. |
-| workspaceId  | integer       | Yes (business) | Workspace where the jobs will be created                                                          |
-| initToBlank  | boolean       | No             | If `true`, jobs start with a blank baseline (no initial screenshot used as reference)             |
+| Field          | Type          | Required       | Description                                                                                       |
+| -------------- | ------------- | -------------- | ------------------------------------------------------------------------------------------------- |
+| `settings`     | object        | Yes            | Shared configuration applied to every job. Same shape as Create Job body (without `url`).         |
+| `jobs`         | array[object] | Yes            | One entry per job to create. Each entry must include `url`; per-job overrides are also supported. |
+| `workspaceId`  | integer       | Yes (business) | Workspace where the jobs will be created                                                          |
+| `initToBlank`  | boolean       | No             | If `true`, jobs start with a blank baseline (no initial screenshot used as reference)             |
 
 The `settings` object accepts every field documented under §3 Create Job (e.g. `mode`, `interval`, `trigger`, `notification`, `preactions`, `labelIds`, `enable_cookies_and_ad_blocker`, `target_device`, `wait_time`, etc.).
 
@@ -471,15 +471,15 @@ Authorization: Bearer <token>
 
 #### Path Parameters
 
-| Parameter | Type    | Required | Description |
+| Parameter | Type | Required | Description |
 | --------- | ------- | -------- | ----------- |
-| jobId     | integer | Yes      | Job ID      |
+| `jobId` | integer | Yes | Job ID |
 
 #### Query Parameters
 
-| Parameter   | Type    | Required       | Description  |
+| Parameter | Type | Required | Description |
 | ----------- | ------- | -------------- | ------------ |
-| workspaceId | integer | Business users | Workspace ID |
+| `workspaceId` | integer | Business users | Workspace ID |
 
 #### Response Body (key fields)
 
@@ -571,9 +571,9 @@ Authorization: Bearer <token>
 
 #### Query Parameters
 
-| Parameter   | Type    | Required       | Description  |
+| Parameter | Type | Required | Description |
 | ----------- | ------- | -------------- | ------------ |
-| workspaceId | integer | Business users | Workspace ID |
+| `workspaceId` | integer | Business users | Workspace ID |
 
 ---
 
@@ -591,10 +591,10 @@ Returns a reverse-chronological flat list of check history items across all jobs
 
 | Field         | Type    | Required | Description                                                              |
 | ------------- | ------- | -------- | ------------------------------------------------------------------------ |
-| workspaceId   | integer | Yes      | Workspace ID                                                             |
-| scope.comboId | integer | Yes      | Negative of `workspaceId` (e.g. workspace `4348` → `-4348`)              |
-| includeErrors | boolean | No       | Include failed checks in the feed (default: `false`)                     |
-| level         | string  | No       | `"allChecks"` to get everything; other values may filter by change level |
+| `workspaceId`   | integer | Yes      | Workspace ID                                                             |
+| `scope`.`comboId` | integer | Yes      | Negative of `workspaceId` (e.g. workspace `4348` → `-4348`)              |
+| `includeErrors` | boolean | No       | Include failed checks in the feed (default: `false`)                     |
+| `level`         | string  | No       | `"allChecks"` to get everything; other values may filter by change level |
 
 #### Request Example
 
@@ -663,18 +663,50 @@ Content-Type: application/json
 
 Manually triggers an immediate check for one or more jobs.
 
+The set of jobs to be run can be either defined as:
+ - a single job (if jobId is provided)
+ - a set of jobs (if jobIds is provided)
+ - all jobs in the workspace (if neither jobId nor jobIds are provided) 
+
+#### Behavior details
+ - workspaceId *must* be provided in case of a business account.
+ - If the request explicitely mentions a job that is currently inactive, the API will reject the call with a 400.
+ - The API will always skip jobs that are currently undergoing a check.
+ - If the owner (user or workspace) doesn't have enough credits to run all jobs, the API will only execute as many as current credits allow.
+
 #### Request Body
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| jobIds | array[int] | Yes | — | Job IDs to run now |
-| workspaceId | integer | Business | — | Workspace ID |
-| restartSchedule | boolean | No | false | If true, the job's recurring schedule is reset to start from now |
+| `jobId` | int | No | — | Job ID to run now. Supersedes `jobIds` if provided. |
+| `jobIds` | array[int] | No | — | Job IDs to run now |
+| `workspaceId` | integer | Yes (if business) | — | Workspace ID |
+| `restartSchedule` | boolean | No | false | If true, the job's recurring schedule is reset to start from now |
+| `dryRun` | boolean | Yes | — | If true, the API won't perform any side effects |
 
-#### Example
+#### Response Body
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `neededCredits` | int | Yes | The number of credits needed to run specified jobs |
+| `userCredits` | int | Yes | The number of credits currently in the user or workspace's balance |
+| `enoughCredits` | boolean | Yes | Whether the user or workspace holds enough credits to run specified jobs |
+
+#### Examples
+
+Run job 6024347 belonging to workspace 2456 now. Reset the cadence of this job as now.
 ```json
-{ "jobIds": [6024347], "restartSchedule": false, "workspaceId": 2456 }
+{ "jobId": 6024347, "restartSchedule": true, "workspaceId": 2456, "dryRun": false }
 ```
 
+Run jobs 6024347 and 6024349 belonging to workspace 2456 now. Preserve the cadence of these jobs.
+```json
+{ "jobIds": [6024347, 6024349], "restartSchedule": false, "workspaceId": 2456, "dryRun": false }
+```
+
+Dry-run all jobs in workspace 2456. Helpful to estimate the number of runnable jobs in the workspace at this point in time.
+```json
+{ "restartSchedule": true, "workspaceId": 2456, "dryRun": true }
+```
+      
 ---
 
 ### 11. List Labels
@@ -688,9 +720,9 @@ Labels are scoped to the **organisation**, not the workspace.
 #### Query Parameters
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| organisationId | integer | Yes | — | Organisation ID (note British spelling) |
-| sortBy | string | No | — | e.g. `alphabetical_asc`, `alphabetical_desc` |
-| computeUsage | int (0/1) | No | 0 | If `1`, each label includes `numOfJobsLabeled` |
+| `organisationId` | integer | Yes | — | Organisation ID (note British spelling) |
+| `sortBy` | string | No | — | e.g. `alphabetical_asc`, `alphabetical_desc` |
+| `computeUsage` | int (0/1) | No | 0 | If `1`, each label includes `numOfJobsLabeled` |
 
 ---
 
@@ -706,16 +738,16 @@ Creates one or more labels in a single request.
 #### Request Body
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| organisationId | integer | Yes | Organisation ID |
-| labels | array[object] | Yes | Labels to create |
+| `organisationId` | integer | Yes | Organisation ID |
+| `labels` | array[object] | Yes | Labels to create |
 
 **Label object (for creation):**
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| id | integer | Yes | Use a **negative sentinel** (`-1`, `-2`, …) to indicate a new label; the server assigns the real ID |
-| name | string | Yes | Label name |
-| color | string | Yes | Hex color, e.g. `"#FFFAEB"` |
-| emoji | string | No | Emoji shortcode, e.g. `":new:"` |
+| `id` | integer | Yes | Use a **negative sentinel** (`-1`, `-2`, …) to indicate a new label; the server assigns the real ID |
+| `name` | string | Yes | Label name |
+| `color` | string | Yes | Hex color, e.g. `"#FFFAEB"` |
+| `emoji` | string | No | Emoji shortcode, e.g. `":new:"` |
 
 #### Example
 ```json
@@ -740,8 +772,8 @@ Content-Type: application/json
 #### Request Body
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| organisationId | integer | Yes | Organisation ID |
-| labels | array[object] | Yes | Labels to update; each must use the real (positive) `id` |
+| `organisationId` | integer | Yes | Organisation ID |
+| `labels` | array[object] | Yes | Labels to update; each must use the real (positive) `id` |
 
 `numOfJobsLabeled` is accepted in the payload but is effectively read-only.
 
@@ -767,8 +799,8 @@ Content-Type: application/json
 #### Request Body
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| id | integer | Yes | Label ID to delete (single, not an array) |
-| organisationId | integer | Yes | Organisation ID |
+| `id` | integer | Yes | Label ID to delete (single, not an array) |
+| `organisationId` | integer | Yes | Organisation ID |
 
 #### Example
 ```json
@@ -789,10 +821,10 @@ Bulk add or remove labels across one or more jobs in a single call.
 #### Request Body
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| organisationId | integer | Yes | Organisation ID |
-| jobIds | array[int] | Yes | Jobs to update |
-| addLabelIds | array[int] | No | Label IDs to add |
-| removeLabelIds | array[int] | No | Label IDs to remove |
+| `organisationId` | integer | Yes | Organisation ID |
+| `jobIds` | array[int] | Yes | Jobs to update |
+| `addLabelIds` | array[int] | No | Label IDs to add |
+| `removeLabelIds` | array[int] | No | Label IDs to remove |
 
 #### Example
 ```json
