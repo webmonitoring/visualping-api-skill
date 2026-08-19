@@ -267,7 +267,8 @@ Content-Type: application/json
 | advanced_schedule | object | No | — | Restrict checks to specific times/days |
 | notification | object | No | — | Notification configuration (see below) |
 | retention_policy | string | No | `"3"` | History retention policy |
-| alert_error | boolean | No | true | Alert on errors |
+| alert_on_error | object\|null | No | default threshold | Error alerting configuration (see below) |
+| alert_error | boolean | No | — | **Deprecated** alias for `alert_on_error`. `true` → `{ "change_baseline": true }`, `false` → reset to the default threshold (it cannot turn error alerts off). Ignored when `alert_on_error` is present in the same request. |
 | summalyzer | object | No | — | AI summary configuration (see below) |
 | labelIds | array[int] | No | — | Labels to attach. See §11–15 for managing labels and bulk job↔label assignment. |
 
@@ -289,6 +290,23 @@ Content-Type: application/json
   }
 }
 ```
+
+#### Alert on Error Object
+
+`alert_on_error` controls whether/how the user is notified when checks fail. It is a **mutually exclusive union** — send exactly one of these shapes:
+
+| Value | Behavior |
+|-------|----------|
+| `{ "threshold": N }` | Send an error notification each time the consecutive-error streak reaches a multiple of `N` (N, 2N, 3N, ...). The baseline is untouched and the streak resets when the job succeeds again. `N` is an integer from 1 to 1000 (`1` = alert on every errored check). |
+| `{ "never": true }` | Never send error notifications. |
+| `{ "change_baseline": true }` | Legacy behavior: the error page is crawled as page content, the baseline moves, and the user gets an ordinary change-detection alert. |
+| `null` | Reset to the default (see below). |
+
+Combining fields (e.g. `threshold` + `never`) is rejected with a 400.
+
+**Default:** when `alert_on_error` was never configured, the job follows a **server-side default threshold** (currently 100 consecutive errors) — absence does **not** mean "never". The only way to disable error alerts is an explicit `{ "never": true }`; the deprecated `"alert_error": false` does **not** disable them, it resets the job to the default threshold. Setting a threshold equal to the current default is stored as "follow the default", so such a job tracks the default if it later changes and `GET` returns no `alert_on_error` for it.
+
+**Delivery:** error alerts go to the job's configured notification channels (email, SMS, webhook, Slack, Teams, Discord, Telegram, Google Chat) — Google Sheets is excluded. The `onlyImportantAlerts` flag does not apply to error alerts. Webhook error payloads carry the standard change-payload fields plus `event: "error"`, `error_label`, `error_message`, and `consecutive_errors` (change payloads carry `event: "change"`); diff/screenshot fields are present when the errored check produced a diff against the baseline.
 
 #### Summalyzer (AI Summary) Object
 
@@ -419,7 +437,7 @@ Each entry in `jobs` must contain at least `url`. Any field accepted by Create J
     "target_device": "4",
     "wait_time": 0,
     "enable_cookies_and_ad_blocker": true,
-    "alert_error": false,
+    "alert_on_error": { "never": true },
     "labelIds": [142819],
     "preactions": {
       "active": true,
@@ -520,9 +538,13 @@ Authorization: Bearer <token>
   ],
   "summalyzer": { "..." },
   "labelIds": [0],
-  "retention_policy": "3"
+  "retention_policy": "3",
+  "alert_on_error": { "threshold": 5 },
+  "alert_error": false
 }
 ```
+
+`alert_on_error` is the configured error-alerting setting (see §3). It is **absent when the job was never configured**, meaning the job follows the server-side default threshold. `alert_error` is the deprecated boolean alias: `true` only when the setting is `{ "change_baseline": true }`.
 
 ---
 
@@ -535,6 +557,8 @@ Content-Type: application/json
 ```
 
 Request body is the same shape as Create Job. Only include fields you want to change.
+
+For `alert_on_error`: omitting the field leaves the current setting unchanged; sending `null` resets the job to the default error-alert threshold; sending `{ "never": true }` turns error alerts off.
 
 ---
 
