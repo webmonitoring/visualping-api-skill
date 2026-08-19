@@ -177,6 +177,8 @@ When a user asks to do something, map it to the right API call(s):
 | "Get my account info" | GET `/describe-user` |
 | "Authenticate" / "Get a token" | POST `/v2/token` |
 | "Set up Slack/webhook notifications" | Include `notification` object in create/update job |
+| "Alert me when a page keeps erroring" / "Notify on failed checks" | PUT `/v2/jobs/{jobId}` with `{ "alert_on_error": { "threshold": N } }` |
+| "Stop error alerts" / "Don't notify me on errors" | PUT `/v2/jobs/{jobId}` with `{ "alert_on_error": { "never": true } }` |
 
 ## The `report-page` endpoint
 
@@ -267,3 +269,4 @@ curl -X POST 'https://job.api.visualping.io/v2/jobs/report-page' \
 - **Labels are organisation-scoped**, not workspace-scoped. Label endpoints (§11–15 of the reference) take `organisationId` (note British spelling), while job endpoints take `workspaceId`. These are distinct IDs — resolve both via `GET /describe-user`.
 - **Creating labels uses negative sentinel IDs** — set `id: -1`, `-2`, etc. on new labels in `POST /v2/jobs/labels`; the server assigns real IDs in the response.
 - **Running a job manually** (`POST /v2/jobs/launch`) triggers an immediate check but leaves the recurring schedule intact. Set `restartSchedule: true` only if the user wants the cadence to reset from now.
+- **Error alerting** is configured via `alert_on_error`, a mutually exclusive union: `{ "threshold": N }` (notify at every multiple of N consecutive failed checks, N = 1–1000, baseline untouched), `{ "never": true }` (off), or `{ "change_baseline": true }` (legacy: the error page becomes the new baseline and triggers a normal change alert). **Unconfigured jobs are not silent** — they follow a server-side default threshold — so to disable error alerts you must send an explicit `{ "never": true }`. `null` resets to the default. The old boolean `alert_error` is a deprecated alias (`true` → `change_baseline`, `false` → reset to the default threshold — it cannot express "never"); prefer `alert_on_error` in new code. See §3 of the reference for details.
