@@ -390,7 +390,6 @@ Creates a job by reusing saved job settings (preset/default preset).
 {
   "workspaceId": 137389,
   "url": "https://example.com",
-  "savedJobSettingsId": 12345,
   "description": "Weekly check from preset"
 }
 ```
