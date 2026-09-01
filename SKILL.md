@@ -174,6 +174,11 @@ When a user asks to do something, map it to the right API call(s):
 | "Rename / recolor a label" | PUT `/v2/jobs/labels` |
 | "Delete a label" | DELETE `/v2/jobs/labels` |
 | "Tag / untag a monitor" / "Add labels to a job" | PUT `/v2/jobs/joblabels` |
+| "List presets" / "Show saved job settings" | GET `/v2/jobs/saved-job-settings?organisationId=...` |
+| "Create a preset" / "Save these settings as a preset" | POST `/v2/jobs/saved-job-settings` |
+| "Delete a preset" | DELETE `/v2/jobs/saved-job-settings/{id}` |
+| "Make this preset the workspace default" | PUT `/v2/jobs/saved-job-settings/{id}/default` |
+| "Change / edit a preset" | Create the corrected preset, then delete the old one (no update endpoint; the ID changes) |
 | "Get my account info" | GET `/describe-user` |
 | "Authenticate" / "Get a token" | POST `/v2/token` |
 | "Set up Slack/webhook notifications" | Include `notification` object in create/update job |
@@ -263,6 +268,7 @@ curl -X POST 'https://job.api.visualping.io/v2/jobs/report-page' \
 
 - The `interval` field is in **minutes** and must be a **string** in create/update requests (e.g., `"1440"` not `1440`). Always convert for the user.
 - For `POST /v2/jobs/from-saved-settings`, omit `interval` unless the user explicitly requests an override.
+- Presets (saved job settings) are organization-scoped and business-only; every preset call needs `organisationId`. There is no preset update endpoint — create a replacement, repoint references, then delete the old one (the ID changes). One default preset per workspace: setting a default clears that workspace from other presets.
 - The `summalyzer` object controls AI-powered change summaries. If the user describes what matters to them, set `importantDefinition` to their description and `importantDefinitionType` to `"custom"`. Otherwise set `importantDefinitionType` to `"default"`.
 - API keys are obtained from https://visualping.io/account/developer (up to 5 active keys).
 - The job detail response includes `history` (all checks) and `changes` (only checks where a change was detected). The `changes` array includes `englishSummary` — an AI-generated description of what changed.
