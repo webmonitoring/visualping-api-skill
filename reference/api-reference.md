@@ -837,6 +837,147 @@ Bulk add or remove labels across one or more jobs in a single call.
 
 ---
 
+### 16. List Saved Job Settings (Presets)
+
+```
+GET https://job.api.visualping.io/v2/jobs/saved-job-settings?organisationId=<orgId>
+Authorization: Bearer <token>
+```
+
+Lists the organization's saved job settings ("presets" in the app). Presets are stored per
+organization and can be applied at job creation (`POST /v2/jobs/from-saved-settings`, section 4)
+or set as a workspace default.
+
+#### Availability
+
+- Business accounts only (presets are organization-scoped).
+- Listing requires organization membership; create/delete/set-default require an ADMIN or
+  EDITOR role in at least one workspace (API keys default to EDITOR).
+
+#### Query Parameters
+
+| Field            | Type    | Required | Description     |
+| ---------------- | ------- | -------- | --------------- |
+| `organisationId` | integer | **Yes**  | Organization ID |
+
+#### Response Body
+
+```json
+{
+  "items": [
+    {
+      "id": 3,
+      "name": "Weekly price check",
+      "settings": {
+        "interval": "10080",
+        "trigger": "1",
+        "notification": { "enableEmailAlert": true },
+        "summalyzer": { "importantDefinition": "price changes", "importantDefinitionType": "custom" }
+      },
+      "defaultForWorkspaces": [137389],
+      "created": "2026-08-01T12:00:00.000Z"
+    }
+  ]
+}
+```
+
+- `settings` may contain any field accepted by job creation (section 3) except a few internal
+  ones — common keys: `interval`, `trigger`, `notification`, `preactions`, `proxy_id`,
+  `target_device`, `wait_time`, `disable_js`, `enable_cookies_and_ad_blocker`, `summalyzer`,
+  `keywords`, `keyword_action`, `retention_policy`.
+- `defaultForWorkspaces` lists the workspaces where this preset is the default (used by
+  `from-saved-settings` when `savedJobSettingsId` is omitted).
+
+---
+
+### 17. Create Saved Job Settings (Preset)
+
+```
+POST https://job.api.visualping.io/v2/jobs/saved-job-settings
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Creates a preset directly — no need to create a throwaway job first.
+
+#### Request Body
+
+| Field                           | Type       | Required | Description                                        |
+| ------------------------------- | ---------- | -------- | -------------------------------------------------- |
+| `organisationId`                | integer    | **Yes**  | Organization ID                                    |
+| `settings.name`                 | string     | **Yes**  | Preset name (1–120 chars)                          |
+| `settings.settings`             | object     | **Yes**  | Job settings to save (see section 16 for keys)     |
+| `settings.defaultForWorkspaces` | array[int] | No       | Workspaces where this preset becomes the default   |
+
+#### Request Example
+
+```json
+{
+  "organisationId": 2455,
+  "settings": {
+    "name": "Daily, email alerts",
+    "settings": {
+      "interval": "1440",
+      "notification": { "enableEmailAlert": true }
+    },
+    "defaultForWorkspaces": []
+  }
+}
+```
+
+#### Response Body
+
+```json
+{ "savedJobSettingsId": 4 }
+```
+
+- Making a preset default for a workspace clears that workspace from any other preset's
+  defaults (one default per workspace).
+- **There is no update endpoint.** To change a preset: create the corrected one, repoint
+  anything referencing the old ID, then delete the old one. The new preset gets a new ID.
+
+---
+
+### 18. Delete Saved Job Settings (Preset)
+
+```
+DELETE https://job.api.visualping.io/v2/jobs/saved-job-settings/<savedJobSettingsId>
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+#### Request Body
+
+| Field                | Type    | Required | Description               |
+| -------------------- | ------- | -------- | ------------------------- |
+| `organisationId`     | integer | **Yes**  | Organization ID           |
+| `savedJobSettingsId` | integer | **Yes**  | ID of the preset to delete (must match the path) |
+
+Deleting a preset does not modify jobs that were created from it.
+
+---
+
+### 19. Set / Unset Workspace Default Preset
+
+```
+PUT https://job.api.visualping.io/v2/jobs/saved-job-settings/<savedJobSettingsId>/default
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Toggles whether the preset is the default for a workspace. Setting a default removes the
+workspace from every other preset's defaults.
+
+#### Request Body
+
+| Field                | Type    | Required | Description       |
+| -------------------- | ------- | -------- | ----------------- |
+| `organisationId`     | integer | **Yes**  | Organization ID   |
+| `workspaceId`        | integer | **Yes**  | Workspace to set/unset the default for |
+| `savedJobSettingsId` | integer | **Yes**  | Preset ID (must match the path) |
+
+---
+
 ## Common Interval Values
 
 | Interval (string) | Human-readable       |
