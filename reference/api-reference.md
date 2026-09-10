@@ -64,6 +64,20 @@ Response:
 
 ---
 
+## Rate Limits
+
+Some endpoints enforce per-caller rate limits, counted per API key, user, or caller IP over a rolling window. Exceeding a limit returns **HTTP 429** with a `THROTTLED` error. Handle 429s by pausing and retrying with exponential backoff — never retry immediately or in a tight loop.
+
+| Endpoint | Limit |
+| --- | --- |
+| `GET https://job.api.visualping.io/v2/jobs/get-diff` — the endpoint that backs diff links (the pages `htmlDiffUrl` points to) | 200 requests per rolling 1-minute window |
+
+Endpoints not listed here have no fixed published limit, but sustained abusive call volume may still be restricted.
+
+Repeatedly or severely exceeding a rate limit can result in the API key or user account being **temporarily suspended**, not just throttled. If an integration legitimately needs higher volume (e.g. bulk-fetching diffs across many jobs), contact support@visualping.io before scaling up rather than retrying through 429s.
+
+---
+
 ## Endpoints
 
 ### 1. Describe User
