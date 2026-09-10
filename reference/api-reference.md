@@ -66,7 +66,7 @@ Response:
 
 ## Rate Limits
 
-Some endpoints enforce per-caller rate limits, counted per API key, user, or caller IP over a rolling window. Exceeding a limit returns **HTTP 429** with a `THROTTLED` error. Handle 429s by pausing and retrying with exponential backoff — never retry immediately or in a tight loop.
+Some endpoints enforce per-caller rate limits, counted per API key, user, or caller IP over a rolling window. Exceeding a limit returns **HTTP 429** with a `THROTTLED` error. Handle 429s by pausing and retrying with exponential backoff — never retry immediately or in a tight loop. Please note that some of the endpoints mentioned in this documentation do not enforce a fixed throttle/suspend threshold. Sustained abusive volume may still be restricted at Visualping's discretion.
 
 | Endpoint | Limit |
 | --- | --- |
