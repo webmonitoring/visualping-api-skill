@@ -62,6 +62,10 @@ Response:
 }
 ```
 
+### Sending the token
+
+The token — API key or ID token — must always be sent as the `Authorization: Bearer <token>` header, on every request. Never send it as a URL query parameter or path segment: query strings get written to access logs, cached by intermediaries, and leaked via `Referer` headers on outbound links. A key passed via the URL instead of the header is treated as missing — the request fails with `AUTHENTICATION_FAILED` (403), not a helpful "wrong auth method" error.
+
 ---
 
 ## Rate Limits
@@ -683,6 +687,7 @@ The set of jobs to be run can be either defined as:
 
 #### Behavior details
  - workspaceId *must* be provided in case of a business account.
+ - `dryRun` has no default and must be sent on every call, even when running jobs for real (`dryRun: false`). Omitting it is a `REQUEST_VALIDATION_ERRORS` 400, not a fallback to a default.
  - If the request explicitely mentions a job that is currently inactive, the API will reject the call with a 400.
  - The API will always skip jobs that are currently undergoing a check.
  - If the owner (user or workspace) doesn't have enough credits to run all jobs, the API will only execute as many as current credits allow.
